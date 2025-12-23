@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weapon Augment Recorder Pro - PC Fixed Layout</title>
+    <title>Table Recorder PC</title>
     <style>
         :root {
             --bg: #1a1c1e; --card-bg: #2d2f31; --border: #444; --text: #f0f0f0;
@@ -23,21 +23,26 @@
         select { background: #3d3f41; color: white; border: 1px solid #555; padding: 10px; border-radius: 6px; outline: none; }
 
         /* ステータス & 逆算エリア */
-        .status-and-calc { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; border-top: 1px solid #444; padding-top: 15px; }
+        .status-and-calc { display: grid; grid-template-columns: 1fr 1.8fr; gap: 20px; border-top: 1px solid #444; padding-top: 15px; }
         
         /* 左側：バッファ表示 */
         .status-display { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .buffer-preview { display: flex; gap: 8px; height: 40px; align-items: center; justify-content: center; }
         .preview-item { background: #1a1c1e; border: 1px solid #555; width: 85px; height: 32px; line-height: 32px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; text-align: center; }
 
-        /* 右側：パーツ入力（常駐UI） */
-        .calc-permanent-ui { display: flex; flex-direction: column; gap: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid #444; }
-        .calc-row { display: flex; align-items: center; gap: 10px; }
-        .calc-row label { font-size: 0.75rem; color: #aaa; min-width: 60px; }
-        .parts-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; flex-grow: 1; }
-        .parts-inputs input { background: #111; color: #fff; border: 1px solid #555; padding: 6px; border-radius: 4px; text-align: center; font-weight: bold; width: 100%; }
-        .est-rd-box { min-width: 100px; text-align: center; border-left: 1px solid #444; padding-left: 10px; }
-        .est-rd-val { font-size: 1.2rem; font-weight: bold; color: var(--gold-bg); }
+        /* 右側：常駐型 逆算UI（縦並び調整版） */
+        .calc-permanent-ui { display: grid; grid-template-columns: 1fr auto; gap: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid #444; }
+        .input-columns { display: flex; flex-direction: column; gap: 12px; }
+        .parts-header-labels { display: grid; grid-template-columns: 80px 1fr 1fr 1fr; gap: 8px; text-align: center; }
+        .parts-header-labels span { font-size: 0.7rem; color: var(--accent); font-weight: bold; }
+        
+        .calc-line { display: grid; grid-template-columns: 80px 1fr 1fr 1fr; gap: 8px; align-items: center; }
+        .calc-line label { font-size: 0.75rem; color: #aaa; font-weight: bold; }
+        .calc-line input { background: #111; color: #fff; border: 1px solid #555; padding: 8px; border-radius: 4px; text-align: center; font-weight: bold; width: 100%; box-sizing: border-box; }
+        
+        .est-rd-box { min-width: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 2px solid #444; padding-left: 15px; }
+        .est-rd-val { font-size: 2rem; font-weight: bold; color: var(--gold-bg); line-height: 1; }
+        .est-label { font-size: 0.65rem; color: #888; margin-bottom: 5px; }
 
         .view-content { display: none; }
         .view-content.active { display: block; }
@@ -54,7 +59,6 @@
         .ox-btn { padding: 15px 40px; border-radius: 8px; border: 1px solid #555; cursor: pointer; font-weight: bold; background: #3d3f41; color: #fff; font-size: 1.2rem; }
         .ox-btn.selected-o { background: var(--accent); border-color: #fff; }
 
-        /* 履歴 */
         .log-section { margin-top: 20px; width: 100%; }
         .log-header-tools { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; }
         .table-container { background: var(--card-bg); border-radius: 12px; overflow-x: auto; border: 1px solid var(--border); scroll-behavior: smooth; }
@@ -103,26 +107,27 @@
             </div>
 
             <div class="calc-permanent-ui">
-                <div class="calc-row">
-                    <label>確認前</label>
-                    <div class="parts-inputs">
-                        <input type="number" id="preAtk" placeholder="攻撃" oninput="calcRound()">
-                        <input type="number" id="preCrit" placeholder="会心" oninput="calcRound()">
-                        <input type="number" id="preElem" placeholder="属性" oninput="calcRound()">
+                <div class="input-columns">
+                    <div class="parts-header-labels">
+                        <span>区分</span><span>攻撃パーツ</span><span>会心パーツ</span><span>属性パーツ</span>
                     </div>
-                    <div class="est-rd-box" rowspan="2">
-                        <div style="font-size:0.65rem; color:#aaa;">推定現在Rd</div>
-                        <div id="resRd" class="est-rd-val">---</div>
+                    <div class="calc-line">
+                        <label>確認前</label>
+                        <input type="number" id="preAtk" oninput="calcRound()">
+                        <input type="number" id="preCrit" oninput="calcRound()">
+                        <input type="number" id="preElem" oninput="calcRound()">
+                    </div>
+                    <div class="calc-line">
+                        <label>現在残り</label>
+                        <input type="number" id="curAtk" oninput="calcRound()">
+                        <input type="number" id="curCrit" oninput="calcRound()">
+                        <input type="number" id="curElem" oninput="calcRound()">
                     </div>
                 </div>
-                <div class="calc-row">
-                    <label>現在残り</label>
-                    <div class="parts-inputs">
-                        <input type="number" id="curAtk" placeholder="攻撃" oninput="calcRound()">
-                        <input type="number" id="curCrit" placeholder="会心" oninput="calcRound()">
-                        <input type="number" id="curElem" placeholder="属性" oninput="calcRound()">
-                    </div>
-                    <div id="resErr" style="color:#ff5252; font-size:0.6rem; font-weight:bold; min-width:100px; text-align:center;"></div>
+                <div class="est-rd-box">
+                    <span class="est-label">推定現在Round</span>
+                    <div id="resRd" class="est-rd-val">---</div>
+                    <div id="resErr" style="color:#ff5252; font-size:0.6rem; font-weight:bold; margin-top:5px; text-align:center;"></div>
                 </div>
             </div>
         </div>
@@ -175,7 +180,7 @@
 
 <script>
     const elemColors = {"無":"#aaa","火":"#f44","水":"#39f","雷":"#fd0","氷":"#4ed","龍":"#e00","毒":"#d4f","麻痺":"#fc0","睡眠":"#0ce","爆破":"#f80"};
-    const MASTER_SKILLS_1 = ["闢獣の力（力自慢）", "火竜の力（灼熱化）", "兇爪竜の力（連撃強化）", "護鎖刃竜の命脈（破壊衝動）", "波衣竜の守護（守護のヴェール）", "煌雷竜の力（雷々響鳴）", "雷顎竜の闘志（無尽蔵）", "雪獅子の闘志（ウォークライ）", "鎧竜の守護", "凍峰竜の反逆", "暗器蛸の力", "獄焔蛸の反逆", "黒蝕竜の力", "鎖刃竜の飢餓", "泡狐竜の力", "白熾龍の脈動", "花舞の祈り", "千刃竜の闘志", "海竜の渦雷", "踊火の祈り", "暗黒騎士の証", "オメガレゾナンス", "夢灯の祈り", "巨戟龍の黙示録"];
+    const MASTER_SKILLS_1 = ["闢獣の力（力自慢）", "火竜の力（灼熱化）", "兇爪竜の力（連撃強化）", "護鎖刃竜の命脈（破壊衝動）", "波衣竜の守護", "煌雷竜の力", "雷顎竜の闘志", "雪獅子の闘志", "鎧竜の守護", "凍峰竜の反逆", "暗器蛸の力", "獄焔蛸の反逆", "黒蝕竜の力", "鎖刃竜の飢餓", "泡狐竜の力", "白熾龍の脈動", "花舞の祈り", "千刃竜の闘志", "海竜の渦雷", "踊火の祈り", "暗黒騎士の証", "オメガレゾナンス", "夢灯の祈り", "巨戟龍の黙示録"];
     const MASTER_SKILLS_2 = ["鱗張りの技法", "革細工の柔性", "毛皮の昂揚", "甲虫の知らせ", "護竜の脈動", "ヌシの誇り", "甲虫の擬態", "革細工の滑性", "鱗重ねの工夫", "毛皮の誘惑", "護竜の守り", "ヌシの憤激", "先達の導き", "栄光の誉れ", "祝祭の巡り", "ヌシの魂（根性【果敢】）", "拳を極めし者"];
 
     let skillEnabledMap = {}; 
@@ -183,14 +188,14 @@
 
     window.onload = function() {
         const catS = document.getElementById('catSelect'); const eleS = document.getElementById('elemSelect');
-        ["大剣","太刀","片手剣","双剣","ハンマー","狩猟笛","スラアク","チャアク","ランス","ガンランス","操虫棍","弓","ライトボウガン","ヘビィボウガン"].forEach(v => catS.add(new Option(v, v)));
+        ["大剣","太刀","片手剣","双剣","ハンマー","狩猟笛","スラアク","チャアク","ランス","ガンランス","操虫棍","弓","Lボウガン","Hボウガン"].forEach(v => catS.add(new Option(v, v)));
         ["無","火","水","雷","氷","龍","毒","麻痺","睡眠","爆破"].forEach(v => eleS.add(new Option(v, v)));
         catS.onchange = eleS.onchange = document.getElementById('numSelect').onchange = () => { updateUI(); renderTable(); };
         loadFromCache(); switchView('normal'); refreshSkillDropdowns(); calcRound();
     };
 
     function saveCache() {
-        localStorage.setItem('aug_pc_vFixedCalc', JSON.stringify({
+        localStorage.setItem('aug_pc_vFixedFinal', JSON.stringify({
             dataNormal, dataSkill, skillEnabledMap, globalActiveColIdx,
             gekika: document.getElementById('gekikaType').value,
             pre: [document.getElementById('preAtk').value, document.getElementById('preCrit').value, document.getElementById('preElem').value],
@@ -199,7 +204,7 @@
     }
 
     function loadFromCache() {
-        const cache = localStorage.getItem('aug_pc_vFixedCalc');
+        const cache = localStorage.getItem('aug_pc_vFixedFinal');
         if (cache) {
             const p = JSON.parse(cache);
             dataNormal = p.dataNormal || {}; dataSkill = p.dataSkill || {};
@@ -228,13 +233,13 @@
             document.getElementById('curRoundInput').value = estimatedRd;
             globalActiveColIdx = estimatedRd; renderTable();
         } else {
-            estimatedRd = 0; resEl.innerText = "???"; errEl.innerText = "異常数値";
+            estimatedRd = 0; resEl.innerText = "???"; errEl.innerText = "パーツ数が異常";
         }
         saveCache();
     }
 
     function autoFillX() {
-        if(estimatedRd <= 1) return alert("逆算Rdが不足");
+        if(estimatedRd <= 1) return alert("逆算Rd不足");
         if(!confirm(`Rd.1?${estimatedRd-1} を全て「×」で埋めますか？`)) return;
         const id = getWId(); const t = (activeMode === 'normal' ? dataNormal : dataSkill);
         const xData = (activeMode === 'normal' ? ['×','×','×','×','×'] : ['×','×']);
@@ -269,7 +274,8 @@
 
     function saveRound() {
         const id = getWId(); const t = (activeMode === 'normal' ? dataNormal : dataSkill);
-        if(!t[id]) t[id] = []; t[id][globalActiveColIdx-1] = [...currentBuffer];
+        if(!t[id]) t[id] = [];
+        t[id][globalActiveColIdx-1] = [...currentBuffer];
         currentBuffer = []; resetSkillUI();
         globalActiveColIdx++; document.getElementById('curRoundInput').value = globalActiveColIdx;
         updateUI(); renderTable(); saveCache(); autoScroll();
@@ -366,6 +372,13 @@
             }
         });
         navigator.clipboard.writeText(tsv).then(() => alert("コピーしました"));
+    }
+    function exportCSV() {
+        let csv = "\uFEFFTYPE,Weapon,Rd1,Rd2,Rd3,Rd4,Rd5\n";
+        const writeData = (data, prefix) => { Object.keys(data).forEach(w => { data[w].forEach(rnd => { csv += `${prefix},${w},${rnd.join(',')}\n`; }); }); };
+        writeData(dataNormal, 'NORMAL'); writeData(dataSkill, 'SKILL');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'augment_records.csv'; a.click();
     }
 </script>
 </body>
