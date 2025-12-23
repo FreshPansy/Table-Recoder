@@ -3,45 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Augment Recorder Mobile Pro - All-X Edition</title>
+    <title>Augment Recorder Mobile Pro - Auto Fill Edition</title>
     <style>
         :root {
             --bg: #121212; --card-bg: #1e1e1e; --border: #333; --text: #f0f0f0;
             --accent: #5c5ce6; --atk-bg: #4a1313; --crit-bg: #13224a; --elem-bg: #2a134a; --sharp-bg: #3d3613;
             --atk-border: #ff5252; --crit-border: #448aff; --elem-border: #b388ff; --sharp-border: #ffd740;
-            --gold-bg: #d4af37;
-            --highlight: rgba(255, 255, 255, 0.15);
+            --gold-bg: #d4af37; --highlight: rgba(255, 255, 255, 0.15);
         }
         body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow: hidden; height: 100dvh; display: flex; flex-direction: column; }
         .header { background: #000; padding: 10px; flex-shrink: 0; border-bottom: 1px solid #333; }
-        .setup-row { display: grid; grid-template-columns: 1fr 1fr 0.6fr; gap: 8px; margin-bottom: 8px; }
-        select { background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; font-size: 0.9rem; }
+        .setup-row { display: grid; grid-template-columns: 1fr 1fr 0.6fr 1fr; gap: 5px; margin-bottom: 8px; }
+        select { background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 8px; border-radius: 6px; font-size: 0.8rem; }
         .tab-group { display: flex; gap: 5px; }
         .tab-btn { flex: 1; background: #222; color: #888; border: none; padding: 12px; border-radius: 8px 8px 0 0; font-weight: bold; font-size: 0.9rem; }
         .tab-btn.active { background: var(--card-bg); color: #fff; border-bottom: 2px solid var(--accent); }
         .main-input { background: var(--card-bg); padding: 10px; flex-shrink: 0; }
-        .status-display { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; height: 40px; }
-        .preview-group { display: flex; gap: 4px; }
-        .p-box { width: 45px; height: 32px; background: #000; border: 1px solid #444; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; }
-        .undo-btn { background: #333; border: 1px solid #555; color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; }
+        
+        .status-display { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; height: 40px; gap: 10px; }
+        .mini-btn { background: #333; border: 1px solid #555; color: #fff; padding: 5px 8px; border-radius: 6px; font-size: 0.7rem; white-space: nowrap; }
+        .preview-group { display: flex; gap: 4px; flex-grow: 1; justify-content: center; }
+        .p-box { width: 40px; height: 32px; background: #000; border: 1px solid #444; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; }
+
         .view-content { display: none; }
         .view-content.active { display: block; }
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .cat-box { border-radius: 10px; padding: 8px; border: 1px solid #555; display: flex; flex-direction: column; gap: 6px; }
-        .cat-name { font-size: 0.7rem; font-weight: bold; color: rgba(255,255,255,0.7); }
+        .cat-name { font-size: 0.65rem; font-weight: bold; color: rgba(255,255,255,0.7); }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .btn { padding: 15px 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-weight: bold; font-size: 1.1rem; }
+        .btn { padding: 14px 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-weight: bold; font-size: 1.1rem; }
         .r-ex { background: var(--gold-bg) !important; color: #000 !important; }
         .skill-row { margin-bottom: 5px; background: #2a2a2a; padding: 10px; border-radius: 10px; }
         .ox-group { display: flex; gap: 10px; }
-        .ox-btn { flex: 1; height: 55px; border-radius: 10px; border: 1px solid #555; font-size: 2rem; font-weight: bold; background: #333; color: #fff; }
+        .ox-btn { flex: 1; height: 50px; border-radius: 10px; border: 1px solid #555; font-size: 1.8rem; font-weight: bold; background: #333; color: #fff; }
         .ox-btn.selected-o { background: var(--accent); border-color: #fff; }
-        .skill-select-container { height: 45px; margin-top: 8px; }
-        .skill-sel { width: 100%; padding: 10px; background: #000; color: #fff; border: 2px solid var(--accent); border-radius: 8px; font-size: 1rem; display: none; }
-        
-        /* 「すべて×」ボタンのスタイル */
-        .all-x-btn { width: 100%; margin-top: 8px; padding: 15px; background: #444; color: #fff; border: 1px solid #666; border-radius: 8px; font-weight: bold; font-size: 1rem; }
-        .all-x-btn:active { background: #666; }
+        .skill-sel { width: 100%; padding: 10px; background: #000; color: #fff; border: 2px solid var(--accent); border-radius: 8px; font-size: 1rem; display: none; margin-top: 8px; }
 
         .log-area { flex-grow: 1; overflow: auto; background: #000; }
         table { width: 100%; border-collapse: collapse; font-size: 0.65rem; table-layout: fixed; }
@@ -51,16 +47,23 @@
         .gold { background: var(--gold-bg) !important; color: #000 !important; font-weight: bold; }
         .col-highlight { background-color: var(--highlight) !important; }
         .col-header-active { background: var(--accent) !important; color: #fff !important; }
-        .set-end td { border-bottom: 2px solid #444 !important; }
         .footer { background: #000; padding: 10px 10px 0 10px; flex-shrink: 0; border-top: 1px solid #333; }
         .nav-spacer { height: 35px; background: #000; width: 100%; }
         .rd-control { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-        .cur-rd-input { background: #111; color: var(--accent); border: 1px solid var(--accent); border-radius: 6px; padding: 10px; width: 55px; text-align: center; font-weight: bold; font-size: 1.1rem; }
-        .next-btn { flex-grow: 1; background: #ff9800; color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; }
+        .cur-rd-input { background: #111; color: var(--accent); border: 1px solid var(--accent); border-radius: 6px; padding: 10px; width: 50px; text-align: center; font-weight: bold; font-size: 1.1rem; }
+        .fill-btn { flex-grow: 1; background: #ff9800; color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; line-height: 1.2; }
+        .calc-btn { background: #444; color: #fff; border: none; padding: 12px 15px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; }
         .action-btns { display: flex; gap: 5px; }
         .action-btns button { flex: 1; padding: 12px; border-radius: 6px; font-size: 0.85rem; border: none; font-weight: bold; }
+
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); width: 90%; max-height: 85vh; overflow-y: auto; padding: 20px; border-radius: 15px; }
+        
+        .parts-box { margin-bottom: 15px; }
+        .parts-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 5px; }
+        .parts-row input { background: #000; color: #fff; border: 1px solid #555; padding: 8px; border-radius: 4px; text-align: center; width: 100%; box-sizing: border-box; }
+        .res-display { background: #111; border: 2px solid var(--accent); border-radius: 8px; padding: 15px; text-align: center; margin-top: 15px; }
+        .err-text { color: #ff5252; font-weight: bold; font-size: 0.8rem; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -69,6 +72,7 @@
     <div class="setup-row">
         <select id="catSelect"></select><select id="elemSelect"></select>
         <select id="numSelect"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        <select id="gekikaType" onchange="saveCache(); calcRound();"><option value="atk">激:攻撃</option><option value="crit">激:会心</option><option value="elem">激:属性</option></select>
     </div>
     <div class="tab-group">
         <button id="t-normal" class="tab-btn active" onclick="switchView('normal')">通常</button>
@@ -78,39 +82,29 @@
 
 <div class="main-input">
     <div class="status-display">
-        <div id="curName" style="font-size: 0.75rem; font-weight: bold; color: #888;">READY</div>
+        <button class="mini-btn" onclick="addAllX()">すべて ×</button>
         <div class="preview-group" id="previewArea"></div>
-        <button class="undo-btn" onclick="undo()">Undo</button>
+        <button class="mini-btn" onclick="undo()">Undo</button>
     </div>
-    
     <div id="view-normal" class="view-content active">
         <div class="input-grid">
-            <div class="cat-box box-atk" style="border-color:var(--atk-border);"><span class="cat-name">攻撃</span>
+            <div class="cat-box" style="border-color:var(--atk-border);"><span class="cat-name">攻撃</span>
                 <div class="btn-grid"><button class="btn" onclick="addValue('攻Ⅰ')">Ⅰ</button><button class="btn" onclick="addValue('攻Ⅱ')">Ⅱ</button><button class="btn" onclick="addValue('攻Ⅲ')">Ⅲ</button><button class="btn r-ex" onclick="addValue('攻EX')">EX</button></div>
             </div>
-            <div class="cat-box box-crit" style="border-color:var(--crit-border);"><span class="cat-name">会心</span>
+            <div class="cat-box" style="border-color:var(--crit-border);"><span class="cat-name">会心</span>
                 <div class="btn-grid"><button class="btn" onclick="addValue('会Ⅰ')">Ⅰ</button><button class="btn" onclick="addValue('会Ⅱ')">Ⅱ</button><button class="btn" onclick="addValue('会Ⅲ')">Ⅲ</button><button class="btn r-ex" onclick="addValue('会EX')">EX</button></div>
             </div>
-            <div class="cat-box box-elem" style="border-color:var(--elem-border);"><span class="cat-name">属性</span>
+            <div class="cat-box" style="border-color:var(--elem-border);"><span class="cat-name">属性</span>
                 <div class="btn-grid"><button class="btn" onclick="addValue('属Ⅰ')">Ⅰ</button><button class="btn" onclick="addValue('属Ⅱ')">Ⅱ</button><button class="btn" onclick="addValue('属Ⅲ')">Ⅲ</button><button class="btn r-ex" onclick="addValue('属EX')">EX</button></div>
             </div>
-            <div class="cat-box box-sharp" style="border-color:var(--sharp-border);"><span class="cat-name">斬/数</span>
+            <div class="cat-box" style="border-color:var(--sharp-border);"><span class="cat-name">斬/数</span>
                 <div class="btn-grid"><button class="btn" onclick="addValue('斬Ⅰ')">Ⅰ</button><button class="btn" onclick="addValue('斬Ⅱ')">Ⅱ</button><button class="btn" onclick="addValue('斬Ⅲ')">Ⅲ</button><button class="btn r-ex" onclick="addValue('斬EX')">EX</button></div>
             </div>
         </div>
-        <button class="all-x-btn" onclick="addAllX()">すべて ×</button>
     </div>
-
     <div id="view-skill" class="view-content">
-        <div class="skill-row">
-            <div class="ox-group"><button class="ox-btn" id="s1-o" onclick="setSkillStatus(1, '○')">○</button><button class="ox-btn" id="s1-x" onclick="setSkillStatus(1, '×')">×</button></div>
-            <div class="skill-select-container"><select id="skill1Select" class="skill-sel" onchange="updateSkillPreview(1)"></select></div>
-        </div>
-        <div class="skill-row">
-            <div class="ox-group"><button class="ox-btn" id="s2-o" onclick="setSkillStatus(2, '○')">○</button><button class="ox-btn" id="s2-x" onclick="setSkillStatus(2, '×')">×</button></div>
-            <div class="skill-select-container"><select id="skill2Select" class="skill-sel" onchange="updateSkillPreview(2)"></select></div>
-        </div>
-        <button class="all-x-btn" onclick="addAllX()">すべて ×</button>
+        <div class="skill-row"><div class="ox-group"><button class="ox-btn" id="s1-o" onclick="setSkillStatus(1,'○')">○</button><button class="ox-btn" id="s1-x" onclick="setSkillStatus(1,'×')">×</button></div><select id="skill1Select" class="skill-sel" onchange="updateSkillPreview(1)"></select></div>
+        <div class="skill-row"><div class="ox-group"><button class="ox-btn" id="s2-o" onclick="setSkillStatus(2,'○')">○</button><button class="ox-btn" id="s2-x" onclick="setSkillStatus(2,'×')">×</button></div><select id="skill2Select" class="skill-sel" onchange="updateSkillPreview(2)"></select></div>
     </div>
 </div>
 
@@ -121,23 +115,52 @@
 <div class="footer">
     <div class="rd-control">
         <input type="number" id="curRdIn" class="cur-rd-input" value="1" onchange="manualSetRd(this.value)">
-        <button class="next-btn" onclick="nextRd()">Next Round (→)</button>
+        <button class="fill-btn" id="fillBtn" onclick="autoFillX()">推定前まで<br>すべて×で埋める</button>
+        <button class="calc-btn" onclick="openModal('calcModal')">逆算</button>
     </div>
     <div class="action-btns">
-        <button style="background: #333; color: #fff;" onclick="openSet()">設定</button>
+        <button style="background: #333; color: #fff;" onclick="openModal('setModal')">設定</button>
         <button id="copyBtn" style="background: #5c5ce6; color: #fff;" onclick="copySS()">SSコピー</button>
         <button style="background: #ef4444; color: #fff;" onclick="clearAll()">消去</button>
     </div>
     <div class="nav-spacer"></div>
 </div>
 
-<div id="setModal" class="modal"><div class="modal-content"><h3>スキル管理</h3><div id="setEditor"></div><button style="width:100%; margin-top:20px; background:var(--accent); color:#fff; border:none; padding:15px; border-radius:8px;" onclick="closeSet()">閉じる</button></div></div>
+<div id="calcModal" class="modal">
+    <div class="modal-content">
+        <h3>ラウンド逆算器</h3>
+        <div class="parts-box">
+            <label style="font-size:0.8rem; color:var(--accent);">①テーブル確認前パーツ数</label>
+            <div class="parts-row">
+                <input type="number" id="preAtk" placeholder="攻撃" oninput="calcRound()">
+                <input type="number" id="preCrit" placeholder="会心" oninput="calcRound()">
+                <input type="number" id="preElem" placeholder="属性" oninput="calcRound()">
+            </div>
+        </div>
+        <div class="parts-box">
+            <label style="font-size:0.8rem; color:var(--accent);">②現在のパーツ数</label>
+            <div class="parts-row">
+                <input type="number" id="curAtk" placeholder="攻撃" oninput="calcRound()">
+                <input type="number" id="curCrit" placeholder="会心" oninput="calcRound()">
+                <input type="number" id="curElem" placeholder="属性" oninput="calcRound()">
+            </div>
+        </div>
+        <div class="res-display">
+            <div style="font-size:0.8rem; opacity:0.7;">推定現在ラウンド</div>
+            <div id="resRd" style="font-size:2rem; font-weight:bold; color:var(--gold-bg);">---</div>
+            <div id="resErr" class="err-text"></div>
+        </div>
+        <button style="width:100%; margin-top:20px; background:#444; color:#fff; border:none; padding:15px; border-radius:8px;" onclick="closeModal('calcModal')">閉じる</button>
+    </div>
+</div>
+
+<div id="setModal" class="modal"><div class="modal-content"><h3>スキル管理</h3><div id="setEditor"></div><button style="width:100%; margin-top:20px; background:var(--accent); color:#fff; border:none; padding:15px; border-radius:8px;" onclick="closeModal('setModal')">閉じる</button></div></div>
 
 <script>
     const elemColors = {"無":"#aaa","火":"#f44","水":"#39f","雷":"#fd0","氷":"#4ed","龍":"#e00","毒":"#d4f","麻痺":"#fc0","睡眠":"#0ce","爆破":"#f80"};
     const MASTER1 = ["闢獣の力（力自慢）","火竜の力（灼熱化）","兇爪竜の力（連撃強化）","護鎖刃竜の命脈（破壊衝動）","波衣竜の守護（守護のヴェール）","煌雷竜の力（雷々響鳴）","雷顎竜の闘志（無尽蔵）","雪獅子の闘志（ウォークライ）","鎧竜の守護（無傷の重装）","凍峰竜の反逆（束縛反攻）","暗器蛸の力（蛮勇の食卓）","獄焔蛸の反逆（恨撃）","黒蝕竜の力（黒蝕一体）","鎖刃竜の飢餓（加速再生）","泡狐竜の力（泡沫の舞）","白熾龍の脈動（超回復力）","花舞の祈り（地の恵み）","千刃竜の闘志（千刃の身躱し）","海竜の渦雷（蒼雷一閃）","踊火の祈り（地の恵み）","暗黒騎士の証（ダークアーツ）","オメガレゾナンス","夢灯の祈り（地の恵み）","巨戟龍の黙示録（宣戦呼応）"];
     const MASTER2 = ["鱗張りの技法（乗り名人）","革細工の柔性（採集の達人）","毛皮の昂揚（不屈）","甲虫の知らせ（ハニーハンター）","護竜の脈動（竜乳活性）","ヌシの誇り（激励）","甲虫の擬態（忍び歩き）","革細工の滑性（滑走強化）","鱗重ねの工夫（奮起）","毛皮の誘惑（陽動）","護竜の守り（竜都の護り）","ヌシの憤激（死中に活）","先達の導き（探索者の幸運）","栄光の誉れ（幸運）","祝祭の巡り（剥ぎ取り名人）","ヌシの魂（根性【果敢】）","拳を極めし者（殺意の波動）"];
-    let dNorm = {}, dSkill = {}, buf = [], mode = 'normal', rdIdx = 1, skMap = {};
+    let dNorm = {}, dSkill = {}, buf = [], mode = 'normal', rdIdx = 1, skMap = {}, estimatedRd = 0;
 
     window.onload = function() {
         const cS = document.getElementById('catSelect'); const eS = document.getElementById('elemSelect');
@@ -145,18 +168,90 @@
         ["無","火","水","雷","氷","龍","毒","麻痺","睡眠","爆破"].forEach(v => eS.add(new Option(v, v)));
         loadCache(); switchView('normal'); refreshDrops();
         cS.onchange = eS.onchange = document.getElementById('numSelect').onchange = () => { updateUI(); render(); };
+        calcRound();
     };
 
-    function saveCache() { localStorage.setItem('aug_mob_vAllX', JSON.stringify({ dNorm, dSkill, skMap, rdIdx })); }
+    function saveCache() {
+        const cache = {
+            dNorm, dSkill, skMap, rdIdx,
+            gekika: document.getElementById('gekikaType').value,
+            pre: [document.getElementById('preAtk').value, document.getElementById('preCrit').value, document.getElementById('preElem').value],
+            cur: [document.getElementById('curAtk').value, document.getElementById('curCrit').value, document.getElementById('curElem').value]
+        };
+        localStorage.setItem('aug_mob_vAutoFill', JSON.stringify(cache));
+    }
+
     function loadCache() {
-        const c = localStorage.getItem('aug_mob_vAllX');
+        const c = localStorage.getItem('aug_mob_vAutoFill');
         if(c) {
             const p = JSON.parse(c); dNorm = p.dNorm||{}; dSkill = p.dSkill||{}; skMap = p.skMap||{}; rdIdx = p.rdIdx||1;
             document.getElementById('curRdIn').value = rdIdx;
+            if(p.gekika) document.getElementById('gekikaType').value = p.gekika;
+            if(p.pre) { document.getElementById('preAtk').value=p.pre[0]; document.getElementById('preCrit').value=p.pre[1]; document.getElementById('preElem').value=p.pre[2]; }
+            if(p.cur) { document.getElementById('curAtk').value=p.cur[0]; document.getElementById('curCrit').value=p.cur[1]; document.getElementById('curElem').value=p.cur[2]; }
         } else {
             MASTER1.forEach(s => { if(s.includes('兇爪')||s.includes('護鎖')||s.includes('波衣')||s.includes('煌雷')||s.includes('雷顎')||s.includes('凍峰')||s.includes('獄焔')||s.includes('黒蝕')||s.includes('鎖刃')||s.includes('泡狐')||s.includes('白熾')||s.includes('千刃')||s.includes('海竜')||s.includes('暗黒')||s.includes('オメガ')||s.includes('巨戟')) skMap[s]=true; });
             skMap["ヌシの魂（根性【果敢】）"] = true;
         }
+    }
+
+    function calcRound() {
+        const type = document.getElementById('gekikaType').value;
+        const pre = [parseInt(document.getElementById('preAtk').value)||0, parseInt(document.getElementById('preCrit').value)||0, parseInt(document.getElementById('preElem').value)||0];
+        const cur = [parseInt(document.getElementById('curAtk').value)||0, parseInt(document.getElementById('curCrit').value)||0, parseInt(document.getElementById('curElem').value)||0];
+        
+        let diff = [pre[0]-cur[0], pre[1]-cur[1], pre[2]-cur[2]];
+        if(type === 'atk') diff[0] *= 2;
+        if(type === 'crit') diff[1] *= 2;
+        if(type === 'elem') diff[2] *= 2;
+
+        const sum = diff[0] + diff[1] + diff[2];
+        const resEl = document.getElementById('resRd');
+        const errEl = document.getElementById('resErr');
+        const fillBtn = document.getElementById('fillBtn');
+        
+        if(sum === 0) { resEl.innerText = "---"; errEl.innerText = ""; estimatedRd = 0; return; }
+        
+        if(sum % 6 === 0 && sum > 0) {
+            estimatedRd = sum / 6;
+            resEl.innerText = estimatedRd + " Rd";
+            errEl.innerText = "";
+            // 推定ラウンドを現在のRd欄に同期
+            document.getElementById('curRdIn').value = estimatedRd;
+            rdIdx = estimatedRd;
+            render();
+        } else {
+            estimatedRd = 0;
+            resEl.innerText = "???";
+            errEl.innerText = "パーツ数が異常です";
+        }
+        saveCache();
+    }
+
+    // 推定ラウンドの1つ前まで一括で「×」を記録する関数
+    function autoFillX() {
+        if(estimatedRd <= 1) {
+            alert("逆算されたラウンドが2以上である必要があります。");
+            return;
+        }
+        if(!confirm(`Round 1 から Round ${estimatedRd - 1} までをすべて「×」で埋めますか？`)) return;
+
+        const id = document.getElementById('catSelect').value + "-" + document.getElementById('elemSelect').value + "-" + document.getElementById('numSelect').value;
+        const t = (mode === 'normal' ? dNorm : dSkill);
+        const xData = (mode === 'normal' ? ['×','×','×','×','×'] : ['×','×']);
+
+        if(!t[id]) t[id] = [];
+        
+        // 指定範囲までを埋める
+        for(let i = 0; i < estimatedRd - 1; i++) {
+            if(!t[id][i]) {
+                t[id][i] = [...xData];
+            }
+        }
+        
+        render();
+        saveCache();
+        scrollRd();
     }
 
     function switchView(m) {
@@ -172,27 +267,20 @@
         resetSkillUI(); updateUI(); render(); scrollRd();
     }
 
-    function addValue(v) { if(buf.length < 5) { buf.push(v); updateUI(); if(buf.length === 5) setTimeout(save, 150); } }
+    function addValue(v) { if(buf.length < 5) { buf.push(v); updateUI(); if(buf.length === (mode==='normal'?5:2)) setTimeout(save, 150); } }
+    function addAllX() { buf = (mode === 'normal' ? ['×','×','×','×','×'] : ['×','×']); updateUI(); setTimeout(save, 150); }
     
-    // 一括ですべて×にして保存する関数
-    function addAllX() {
-        if(mode === 'normal') {
-            buf = ['×','×','×','×','×'];
-        } else {
-            buf = ['×','×'];
-        }
-        updateUI();
-        setTimeout(save, 150);
-    }
-
     function save() {
         const id = document.getElementById('catSelect').value + "-" + document.getElementById('elemSelect').value + "-" + document.getElementById('numSelect').value;
         const t = (mode === 'normal' ? dNorm : dSkill);
-        if(!t[id]) t[id] = []; t[id].push([...buf]);
+        if(!t[id]) t[id] = [];
+        t[id][rdIdx - 1] = [...buf];
         buf = []; resetSkillUI(); updateUI(); render(); saveCache();
+        // 自動で次のRdへ
+        rdIdx++; document.getElementById('curRdIn').value = rdIdx; render(); scrollRd();
     }
-    function resetSkillUI() { document.querySelectorAll('.ox-btn').forEach(b => {b.classList.remove('selected-o'); b.classList.remove('selected-x');}); document.querySelectorAll('.skill-sel').forEach(s => s.style.display = 'none'); }
     
+    function resetSkillUI() { document.querySelectorAll('.ox-btn').forEach(b => {b.classList.remove('selected-o'); b.classList.remove('selected-x');}); document.querySelectorAll('.skill-sel').forEach(s => s.style.display = 'none'); }
     function setSkillStatus(slot, s) {
         const oBtn = document.getElementById('s'+slot+'-o'); const xBtn = document.getElementById('s'+slot+'-x');
         oBtn.classList.toggle('selected-o', s === '○'); xBtn.classList.toggle('selected-x', s === '×');
@@ -201,7 +289,6 @@
         buf[slot-1] = (s === '×' ? '×' : sel.value); updateUI(); if(buf[0] && buf[1]) setTimeout(save, 300);
     }
     function updateSkillPreview(slot) { if(document.getElementById('s'+slot+'-o').classList.contains('selected-o')) { buf[slot-1] = document.getElementById('skill'+slot+'Select').value; updateUI(); if(buf[0] && buf[1]) setTimeout(save, 300); } }
-    function nextRd() { rdIdx++; document.getElementById('curRdIn').value = rdIdx; render(); saveCache(); scrollRd(); }
     function manualSetRd(v) { rdIdx = parseInt(v)||1; render(); saveCache(); scrollRd(); }
     function scrollRd() { const log = document.getElementById('logArea'); if(rdIdx > 1) log.scrollLeft = (rdIdx - 1) * 65; }
 
@@ -218,7 +305,7 @@
         Object.keys(t).sort((x,y) => x===curW?-1:y===curW?1:x.localeCompare(y)).forEach(id => {
             const color = elemColors[id.split('-')[1]] || "#eee";
             for(let i=0; i<rows; i++){
-                const tr = document.createElement('tr'); if(i===rows-1) tr.className = 'set-end';
+                const tr = document.createElement('tr'); if(i===rows-1) tr.style.borderBottom="2px solid #444";
                 if(i===0) tr.innerHTML = `<td class="w-name" rowspan="${rows}" style="color:${color}">${id}</td>`;
                 for(let r=1; r<=limit; r++){
                     const val = t[id][r-1] ? t[id][r-1][i] : ""; const td = document.createElement('td'); td.innerText = (val||"").replace(/（.*?）/g, "");
@@ -234,34 +321,27 @@
         let tsv = ""; Object.keys(t).sort().forEach(id => {
             for(let i=0; i<(mode==='normal'?5:2); i++){ tsv += (i === 0 ? id : "") + "\t"; for(let r=0; r<maxR; r++) tsv += (t[id][r] ? t[id][r][i] : "") + "\t"; tsv += "\n"; }
         });
-        const textArea = document.createElement("textarea"); textArea.value = tsv; textArea.style.position = "fixed"; textArea.style.left = "-9999px"; textArea.style.top = "0";
-        document.body.appendChild(textArea); textArea.focus(); textArea.select(); textArea.setSelectionRange(0, 99999);
-        let success = false; try { success = document.execCommand('copy'); } catch (err) {}
+        const textArea = document.createElement("textarea"); textArea.value = tsv; textArea.style.position = "fixed"; textArea.style.left = "-9999px";
+        document.body.appendChild(textArea); textArea.select();
+        try { document.execCommand('copy'); document.getElementById('copyBtn').innerText="完了"; setTimeout(()=>document.getElementById('copyBtn').innerText="SSコピー",1000); } catch(e){}
         document.body.removeChild(textArea);
-        if(success) {
-            const btn = document.getElementById('copyBtn'); const originalText = btn.innerText;
-            btn.innerText = "完了！"; btn.style.background = "#10b981";
-            setTimeout(() => { btn.innerText = originalText; btn.style.background = "#5c5ce6"; }, 1500);
-        }
     }
 
     function updateUI() {
-        document.getElementById('curName').innerText = document.getElementById('catSelect').value + "-" + document.getElementById('elemSelect').value + "-" + document.getElementById('numSelect').value;
         for(let i=0; i<(mode==='normal'?5:2); i++) { const el = document.getElementById('p-' + i); if(el) el.innerText = (buf[i] || "").replace(/（.*?）/g, ""); }
     }
-    function undo() { buf.pop(); updateUI(); }
-    function clearAll() { if(confirm("消去しますか？")) { dNorm={}; dSkill={}; saveCache(); render(); } }
-    function openSet() {
-        const area = document.getElementById('setEditor'); area.innerHTML = '';
-        [MASTER1, MASTER2].forEach((list, idx) => {
-            const t = document.createElement('div'); t.style = "color:var(--accent); font-weight:bold; margin-top:15px;"; t.innerText = "リスト " + (idx+1); area.appendChild(t);
-            list.forEach(s => {
-                const d = document.createElement('div'); d.style = "margin:10px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:0.8rem;";
-                d.innerHTML = `<input type="checkbox" ${skMap[s]?'checked':''} onchange="skMap['${s}']=this.checked; refreshDrops(); saveCache();"> <span style="margin-left:8px;">${s}</span>`; area.appendChild(d);
-            });
-        }); document.getElementById('setModal').style.display='flex';
+    function undo() { 
+        if(buf.length > 0) { buf.pop(); } 
+        else {
+            const id = document.getElementById('catSelect').value + "-" + document.getElementById('elemSelect').value + "-" + document.getElementById('numSelect').value;
+            const t = (mode === 'normal' ? dNorm : dSkill);
+            if(rdIdx > 1) { rdIdx--; document.getElementById('curRdIn').value = rdIdx; if(t[id]) delete t[id][rdIdx-1]; }
+        }
+        updateUI(); render(); 
     }
-    function closeSet() { document.getElementById('setModal').style.display='none'; }
+    function clearAll() { if(confirm("消去しますか？")) { dNorm={}; dSkill={}; saveCache(); render(); } }
+    function openModal(id) { document.getElementById(id).style.display='flex'; }
+    function closeModal(id) { document.getElementById(id).style.display='none'; }
     function refreshDrops() {
         const s1 = document.getElementById('skill1Select'); const s2 = document.getElementById('skill2Select');
         s1.innerHTML = ''; s2.innerHTML = '';
