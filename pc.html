@@ -223,20 +223,36 @@
     }
 
     function calcRound() {
-        const type = document.getElementById('gekikaType').value;
-        const pre = [parseInt(document.getElementById('preAtk').value), parseInt(document.getElementById('preCrit').value), parseInt(document.getElementById('preElem').value)];
-        const cur = [parseInt(document.getElementById('curAtk').value), parseInt(document.getElementById('curCrit').value), parseInt(document.getElementById('curElem').value)];
-        if (pre.every(v => isNaN(v)) && cur.every(v => isNaN(v))) return;
-        let diff = [(pre[0]||0)-(cur[0]||0), (pre[1]||0)-(cur[1]||0), (pre[2]||0)-(cur[2]||0)];
-        if(type === 'atk') diff[0] *= 2; if(type === 'crit') diff[1] *= 2; if(type === 'elem') diff[2] *= 2;
-        const sum = diff[0] + diff[1] + diff[2];
-        const resEl = document.getElementById('resRd'); const errEl = document.getElementById('resErr');
-        if(sum >= 0 && sum % 6 === 0) {
-            estimatedRd = (sum / 6) + 1; resEl.innerText = estimatedRd; errEl.innerText = "";
-            globalActiveColIdx = estimatedRd; document.getElementById('curRoundInput').value = estimatedRd; renderTable();
-        } else { estimatedRd = 0; resEl.innerText = "???"; errEl.innerText = "異常"; }
-        saveCache();
+    const type = document.getElementById('gekikaType').value;
+    const pre = [parseInt(document.getElementById('preAtk').value), parseInt(document.getElementById('preCrit').value), parseInt(document.getElementById('preElem').value)];
+    const cur = [parseInt(document.getElementById('curAtk').value), parseInt(document.getElementById('curCrit').value), parseInt(document.getElementById('curElem').value)];
+    
+    if (pre.every(v => isNaN(v)) && cur.every(v => isNaN(v))) return;
+
+    let diff = [(pre[0]||0)-(cur[0]||0), (pre[1]||0)-(cur[1]||0), (pre[2]||0)-(cur[2]||0)];
+    if(type === 'atk') diff[0] *= 2; if(type === 'crit') diff[1] *= 2; if(type === 'elem') diff[2] *= 2;
+    const sum = diff[0] + diff[1] + diff[2];
+
+    const resEl = document.getElementById('resRd'); const errEl = document.getElementById('resErr');
+
+    if(sum === 0) {
+        // 特殊ケース：消費0のときはラウンド1
+        estimatedRd = 1; resEl.innerText = "1"; errEl.innerText = "";
+    } else if(sum > 0 && sum % 6 === 0) {
+        // 通常ケース：(sum / 6) + 1 から 1を引く ＝ sum / 6
+        estimatedRd = sum / 6;
+        resEl.innerText = estimatedRd; errEl.innerText = "";
+    } else {
+        estimatedRd = 0; resEl.innerText = "???"; errEl.innerText = "パーツ数が異常";
     }
+
+    if(estimatedRd > 0) {
+        globalActiveColIdx = estimatedRd;
+        document.getElementById('curRoundInput').value = estimatedRd;
+        renderTable();
+    }
+    saveCache();
+} 
 
     function saveRound() {
         const id = getWId(); const t = (activeMode === 'normal' ? dataNormal : dataSkill);
