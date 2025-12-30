@@ -184,7 +184,7 @@
             if(p.pre){ document.getElementById('preAtk').value=p.pre[0]; document.getElementById('preCrit').value=p.pre[1]; document.getElementById('preElem').value=p.pre[2]; }
             if(p.cur){ document.getElementById('curAtk').value=p.cur[0]; document.getElementById('curCrit').value=p.cur[1]; document.getElementById('curElem').value=p.cur[2]; }
         } else {
-            const on1 = ["兇爪","護鎖","波衣","煌雷","雷顎","凍峰","獄焔","黒蝕","鎖刃","泡狐","白熾","千刃","海竜","暗黒騎士","オメガ","巨戟"];
+            const on1 = ["火竜","闢獣","兇爪","護鎖","波衣","煌雷","雷顎","雪獅子", "鎧竜","凍峰","獄焔","黒蝕","鎖刃","泡狐","白熾","千刃","海竜","暗黒騎士","オメガ","巨戟"];
             MASTER_SKILLS_1.forEach(s => { if(on1.some(k => s.includes(k))) skMap[s] = true; });
             skMap["ヌシの魂（根性【果敢】）"] = true;
         }
